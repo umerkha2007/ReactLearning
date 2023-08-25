@@ -1,0 +1,146 @@
+Refs and Forward Refs
+https://codepen.io/pdcamargo/pen/RwBvLmW
+
+Run:
+npm start
+
+Build new project:
+npx create-react-app my-app
+
+**Components can be functions or classes**
+*Function Syntax:*
+function Welcome(props) {
+  return <h1>Hello, {props.name}</h1>;
+}
+
+*Classes Syntax:*
+class Welcome extends React.Component {
+  render() {
+    return <h1>Hello, {this.props.name}</h1>;
+  }
+}
+
+**States**
+*useState Syntax* (Used when you want to re render the UI)
+const [variable, changeStateFunction] = useState(defaultValue);
+
+*useReducer Syntax* (Used when you have to manage multiple states on single action)
+ const reducer = (state, action) => {
+    switch (action.type) {
+      case "ADD":
+        return { id: 1, reminder: state.reminder };
+      case "DELETE":
+        return { id: state.id, reminder: true };
+      default:
+        return state;
+    }
+  }
+const [state, dispatch] = useReducer(reducer, initialState, init)
+
+*useEffect Syntax* (Used when the page loads (ngInit)) (Mostly used for API Calls) (After the UI renders)
+    useEffect(() => {
+        const getTasks = async () => {
+        const fetchTasksResult = await fetchTasks();
+        setTasks(fetchTasksResult);
+        };
+        getTasks();
+    }, []);
+
+*useLayoutEffect Syntax* (Used before page load (ngBeforeInit)) 
+(Mostly used before you want to change Layout before it renders) 
+(Before the UI renders)
+ useLayoutEffect(() => {
+        console.log("I will be rendered before every UI element")
+    }, []);
+
+*useRef Syntax* (Used when you want to manipulate DOM elements (document.getElementById))
+const reminderRef = useRef(null) // declaration
+<input type='checkbox' ref={reminderRef} />
+
+useRef(null) is basically useState(React.createRef())[0].
+
+console.log(reminderRef.current) // get the element
+console.log(reminderRef.current.value) // get the value
+* To focus on an input *
+inputRef.current.focus()
+
+*ImperitiveHandle Syntax* (Used when you want to modify the state of the child component from the parent component)
+(Used when you want to create a reusable component that can be invoked from the outside)
+https://stackblitz.com/edit/react-vf39fv?file=src%2FChildButton.js
+
+
+*useContext Syntax* (Used when you have 2 or more child components and you want to manage states in the parent component)
+https://stackblitz.com/edit/react-ts-gajdvw?file=ParentComponent.tsx
+
+*useMemo Syntax* (Used when you have two or more states in a component and one of its state change has a huge computational
+work, because if one of the state changes in a component, all of its states are re rendered)
+(useMemo used for objects and arrays, shouldn't be used for primitives)
+(useMemo compares references, not values, so if you're mantaining integrity of a function,
+use useCallback along with useMemo for useMemo to work only when data updates)
+const getLongestName useMemo (() => findLongestName(data), [data])
+<div>
+    { getLongestName }
+</div>
+OR
+const anyVariable useMemo(() => functionWhichNeedsToReRender(arguments), [dependancyWhichWillTriggerReRenderOfThatFunction])
+
+*useCallback Syntax* (Used when you pass a child component, a callback function, if the state of the parent component
+changes, the callback function will re render, regardless of whether its in a child component, to solve it, you 
+use useCallback hook)
+(useCallback used for functions)
+(useMemo used for objects and arrays, shouldn't be used for primitives)
+
+*forwardRef Syntax* (Used when you want to pass an html element to children)
+const CustomInput = React.forwardRef<HTMLInputElement, CustomInputProps>(
+  ({ placeholder, ...props }, ref) => (
+    <Input ref={ref} icon={SvgCalendar} placeholder={placeholder} {...props} />
+  ),
+);
+
+or
+
+const InputText = React.forwardRef((props, ref) => (
+ <input ref={ref} {...props} />
+));
+
+
+
+*In JSX* (Different from HTML) -> JavaScript Syntax Extension 
+1. For class, use className e.g. <div className="container">
+   For for attribute, use HTMLfor e.g. <label htmlFor="name">Name</label>
+2. In JSX, you must return a single parent e.g. <div></div> or <> </>
+3. Include JS directly e.g. { new Date() } or <p> {2 + 5} is seven </p>
+4. All tags can self close e.g. <span />
+5. All tags need to close
+6. All HTML attributes must be camelCase e.g. onclick -> onClick
+7. Inline styles will be objects e.g.
+        const Article = () => {
+            const inlineStyle = {
+                color: "#2ecc71",
+                fontSize: "26px",
+            };
+            return (
+                <>
+                    <p style={inlineStyle}>Hi campers</p>
+                </>
+            );
+        };
+        export default Article;
+    
+    OR
+
+    <p style={{ color: "#2ecc71", fontSize: "26px" }}>Hi campers</p>
+
+
+    **Create Boiler plate **
+    Class -> rcc
+    Function -> rfce
+    Const Function -> rafce
+    import PropTypes -> impt
+
+
+    To Build for production:
+    npm run build
+
+    To serve Build folder (Production folder):
+    serve -s build -p 8000
